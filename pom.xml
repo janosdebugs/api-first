@@ -26,5 +26,18 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.1.6.RELEASE</version>
         </dependency>
+
+        <!-- region JPA + H2 database -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>2.1.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+        </dependency>
+        <!-- endregion -->
     </dependencies>
 </project>
