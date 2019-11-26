@@ -1,6 +1,6 @@
 package at.pasztor.backend.post.storage;
 
-import at.pasztor.backend.ApiException;
+import at.pasztor.backend.post.exception.ApiException;
 import at.pasztor.backend.post.entity.BlogPost;
 import java.util.List;
 

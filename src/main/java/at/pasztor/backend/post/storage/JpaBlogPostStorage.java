@@ -1,14 +1,12 @@
 package at.pasztor.backend.post.storage;
 
-import at.pasztor.backend.ApiException;
+import at.pasztor.backend.post.exception.ApiException;
 import at.pasztor.backend.post.entity.BlogPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JpaBlogPostStorage implements BlogPostStorage {
@@ -28,7 +26,12 @@ public class JpaBlogPostStorage implements BlogPostStorage {
     public BlogPost getBySlug(String slug) throws ApiException {
         Optional<BlogPost> post = repository.findById(slug);
         if (!post.isPresent()) {
-            throw new ApiException(HttpStatus.NOT_FOUND, ApiException.ErrorCode.NOT_FOUND, "The blog post you requested was not found.");
+            throw new ApiException(
+                HttpStatus.NOT_FOUND,
+                ApiException.ErrorCode.NOT_FOUND,
+                "The blog post you requested was not found.",
+                new HashMap<>()
+            );
         }
         return post.get();
     }
