@@ -11,9 +11,12 @@ import java.util.stream.Collectors;
 @Service
 public class ApiExceptionFactory implements ExceptionFactory<ApiException> {
     @Override
-    public void create(Map<String, Collection<String>> errors) throws ApiException {
+    public void create(Map<String, Set<String>> errors) throws ApiException {
         Map<String, Set<ValidationError>> exceptionErrors = new HashMap<>();
-        for (Map.Entry<String, Collection<String>> error : errors.entrySet()) {
+        for (Map.Entry<String, Set<String>> error : errors.entrySet()) {
+            if (error.getValue().isEmpty()) {
+                continue;
+            }
             exceptionErrors.put(
                 error.getKey(),
                 error
@@ -23,11 +26,13 @@ public class ApiExceptionFactory implements ExceptionFactory<ApiException> {
                     .collect(Collectors.toSet())
             );
         }
-        throw new ApiException(
-            HttpStatus.BAD_REQUEST,
-            ApiException.ErrorCode.VALIDATION_FAILED,
-            "Please verify your input and correct the following errors.",
-            exceptionErrors
-        );
+        if (!exceptionErrors.isEmpty()) {
+            throw new ApiException(
+                HttpStatus.BAD_REQUEST,
+                ApiException.ErrorCode.VALIDATION_FAILED,
+                "Please verify your input and correct the following errors.",
+                exceptionErrors
+            );
+        }
     }
 }

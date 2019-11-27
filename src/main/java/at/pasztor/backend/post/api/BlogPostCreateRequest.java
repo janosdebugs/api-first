@@ -1,11 +1,10 @@
 package at.pasztor.backend.post.api;
 
+import at.pasztor.backend.post.exception.ApiException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -54,7 +53,7 @@ public class BlogPostCreateRequest {
 
         @JsonProperty(value = "content")
         String content
-    ) {
+    ) throws ApiException {
         this.slug = slug;
         this.title = title;
         this.content = content;

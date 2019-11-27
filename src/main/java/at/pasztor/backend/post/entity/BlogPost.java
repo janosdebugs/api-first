@@ -1,5 +1,7 @@
 package at.pasztor.backend.post.entity;
 
+import at.pasztor.backend.post.exception.ApiException;
+import at.pasztor.backend.post.validation.EntityValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -57,12 +59,15 @@ public class BlogPost {
     }
 
     public BlogPost(
-            String slug,
-            String title,
-            String content
-    ) {
+        String slug,
+        String title,
+        String content,
+        EntityValidator<BlogPost> entityValidator
+    ) throws ApiException {
         this.slug = slug;
         this.title = title;
         this.content = content;
+
+        entityValidator.validate(this);
     }
 }

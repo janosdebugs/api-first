@@ -1,8 +1,9 @@
 package at.pasztor.backend.post.api;
 
-import at.pasztor.backend.post.exception.ApiException;
 import at.pasztor.backend.post.entity.BlogPost;
+import at.pasztor.backend.post.exception.ApiException;
 import at.pasztor.backend.post.storage.BlogPostStorage;
+import at.pasztor.backend.post.validation.EntityValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Api(
@@ -21,10 +20,15 @@ import java.util.List;
 @RequestMapping("/posts")
 public class BlogPostController {
     private final BlogPostStorage storage;
+    private final EntityValidator<BlogPost> entityValidator;
 
     @Autowired
-    public BlogPostController(BlogPostStorage storage) {
+    public BlogPostController(
+        BlogPostStorage storage,
+        EntityValidator<BlogPost> entityValidator
+    ) {
         this.storage = storage;
+        this.entityValidator = entityValidator;
     }
 
     @ApiOperation(
@@ -38,15 +42,15 @@ public class BlogPostController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public BlogPost create(
-        @NotNull
         @ApiParam(required = true)
         @RequestBody
         BlogPostCreateRequest request
-    ) {
+    ) throws ApiException {
         BlogPost post = new BlogPost(
-                request.slug,
-                request.title,
-                request.content
+            request.slug,
+            request.title,
+            request.content,
+            entityValidator
         );
         storage.store(post);
         return post;
@@ -105,9 +109,10 @@ public class BlogPostController {
         String content = request.content==null?post.content:request.content;
 
         post = new BlogPost(
-                post.slug,
-                title,
-                content
+            post.slug,
+            title,
+            content,
+            entityValidator
         );
         storage.store(post);
         return post;
